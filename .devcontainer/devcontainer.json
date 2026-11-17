@@ -1,0 +1,16 @@
+﻿{
+  "name": "Reserva Hotel (.NET 10 + SQL Server)",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": { "version": "10.0" }
+  },
+  "forwardPorts": [5080],
+  "portsAttributes": {
+    "5080": { "label": "Reserva Hotel", "onAutoForward": "openBrowser" }
+  },
+  "postCreateCommand": "dotnet restore ReservaHotel.sln",
+  "postStartCommand": "nohup dotnet run --project src/ReservaHotel.Web --urls http://0.0.0.0:5080 > /tmp/reservahotel.log 2>&1 &",
+  "customizations": { "vscode": { "extensions": ["ms-dotnettools.csharp"] } }
+}

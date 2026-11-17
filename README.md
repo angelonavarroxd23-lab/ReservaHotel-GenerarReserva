@@ -1,4 +1,4 @@
-# Reserva Hotel – Caso de uso «Generar Reserva de Habitación»
+﻿# Reserva Hotel – Caso de uso «Generar Reserva de Habitación»
 
 Prototipo web (ASP.NET Core MVC, .NET 10, EF Core 10, SQL Server) y documentación UML del caso de uso *Generar reserva de habitación* (actor: Recepcionista).
 
@@ -9,6 +9,16 @@ Prototipo web (ASP.NET Core MVC, .NET 10, EF Core 10, SQL Server) y documentaci�
 - `docs/Generar_Reserva_Habitacion_UML.docx` – diagramas de secuencia, comunicación y clases.
 - `docs/diagramas/` – diagramas en PNG. `docs/capturas/` – capturas del prototipo.
 
+[![Abrir en GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/angelonavarroxd23-lab/ReservaHotel-GenerarReserva)
+
+## Ejecutar en GitHub (Codespaces)
+1. Pulsa el botón **Open in GitHub Codespaces** de arriba (o *Code → Codespaces → Create codespace on main*).
+2. Espera a que se cree el entorno (.NET 10 + SQL Server 2022 en contenedor); la base de datos se crea sola con las migraciones.
+3. La aplicación arranca automáticamente en el puerto 5080: abre la pestaña **Ports** y pulsa el enlace de «Reserva Hotel».
+   - Si no arrancó: `dotnet run --project src/ReservaHotel.Web --urls http://0.0.0.0:5080` y revisa `/tmp/reservahotel.log`.
+- La configuración está en `.devcontainer/`. La contraseña `sa` de ese SQL Server es solo de desarrollo y vive dentro del Codespace.
+- GitHub Pages no sirve para esta app (solo aloja páginas estáticas; aquí hacen falta servidor y base de datos).
+- Nota: esta configuración no se ha podido probar de extremo a extremo antes de publicarla.
 ## Requisitos
 - .NET SDK 10
 - SQL Server (Express/Developer/LocalDB u otra instancia)
@@ -48,3 +58,4 @@ Buscar/registrar cliente, fechas y cálculo de días, buscar habitaciones dispon
 
 ## Limitaciones
 Probado en SQL Server local con Windows Authentication; no se probó con carga ni en otros entornos.
+

@@ -1,0 +1,24 @@
+﻿services:
+  app:
+    image: mcr.microsoft.com/devcontainers/base:ubuntu
+    command: sleep infinity
+    volumes:
+      - ..:/workspaces/ReservaHotel-GenerarReserva:cached
+    environment:
+      ConnectionStrings__ReservaHotelDB: "Server=db,1433;Database=ReservaHotelDB;User Id=sa;Password=Reserva#Dev2026;TrustServerCertificate=True;"
+      Database__AutoMigrate: "true"
+      ASPNETCORE_ENVIRONMENT: "Development"
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Reserva#Dev2026"
+      MSSQL_PID: "Developer"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P 'Reserva#Dev2026' -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20

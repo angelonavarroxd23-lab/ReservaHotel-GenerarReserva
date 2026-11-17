@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · Hotel – Sistema de Reservas</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark app-navbar">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <span class="brand-mark">H</span> Hotel · Reservas
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu"
+                        aria-controls="menu" aria-expanded="false" aria-label="Menú">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="menu">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Menú principal</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Reserva" asp-action="Iniciar">Generar reserva</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Reserva" asp-action="Listado">Reservas</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Habitaciones" asp-action="Index">Habitaciones</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Clientes" asp-action="Index">Clientes</a></li>
+                    </ul>
+                    <span class="navbar-text small">Usuario: Recepcionista</span>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container app-main" role="main">
+        <partial name="_Alertas" />
+        @RenderBody()
+    </main>
+    <footer class="app-footer">
+        <div class="container">Prototipo académico · Caso de uso: Generar reserva de habitación</div>
+    </footer>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

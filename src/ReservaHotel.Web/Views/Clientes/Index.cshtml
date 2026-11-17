@@ -1,0 +1,35 @@
+@model List<Cliente>
+@{
+    ViewData["Title"] = "Clientes";
+    var q = ViewBag.Q as string;
+}
+<div class="page-head d-flex justify-content-between align-items-end flex-wrap gap-2">
+    <div>
+        <h1>Clientes</h1>
+        <p>Busque por código, nombres o apellidos.</p>
+    </div>
+    <a class="btn btn-primary" asp-action="Crear">Agregar cliente</a>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <div class="col-sm-8 col-md-6"><input type="text" name="q" value="@q" class="form-control" placeholder="Código, nombres o apellidos" /></div>
+    <div class="col-auto"><button class="btn btn-outline-primary" type="submit">Buscar</button></div>
+</form>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="tabla-clientes">
+            <thead><tr><th>Código</th><th>Nombres</th><th>Apellidos</th></tr></thead>
+            <tbody>
+            @foreach (var c in Model)
+            {
+                <tr><td class="fw-semibold">@c.Codigo</td><td>@c.Nombres</td><td>@c.Apellidos</td></tr>
+            }
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="3" class="text-center text-muted py-4">No se encontraron clientes.</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

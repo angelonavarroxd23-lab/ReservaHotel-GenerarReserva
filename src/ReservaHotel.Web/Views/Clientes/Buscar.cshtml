@@ -1,0 +1,54 @@
+@model List<Cliente>
+@{
+    ViewData["Title"] = "Buscar Cliente";
+    var q = ViewBag.Q as string;
+    var retorno = ViewBag.Retorno as string;
+}
+<div class="page-head">
+    <h1>Buscar Cliente</h1>
+    <p>Caso de uso incluido. Seleccione el cliente para la reserva.</p>
+</div>
+
+<form method="get" class="row g-2 mb-3">
+    <input type="hidden" name="retorno" value="@retorno" />
+    <div class="col-sm-8 col-md-6"><input type="text" name="q" value="@q" class="form-control" placeholder="Código, nombres o apellidos" autofocus /></div>
+    <div class="col-auto"><button class="btn btn-outline-primary" type="submit">Buscar</button></div>
+</form>
+
+<div class="card shadow-sm mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="tabla-buscar-cliente">
+            <thead><tr><th>Código</th><th>Nombres</th><th>Apellidos</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var c in Model)
+            {
+                <tr>
+                    <td class="fw-semibold">@c.Codigo</td><td>@c.Nombres</td><td>@c.Apellidos</td>
+                    <td class="text-end">
+                        @if (retorno == "reserva")
+                        {
+                            <a class="btn btn-sm btn-primary" asp-controller="Reserva" asp-action="SeleccionarCliente" asp-route-codigo="@c.Codigo">Seleccionar</a>
+                        }
+                    </td>
+                </tr>
+            }
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="4" class="text-center text-muted py-4">Cliente no existe</td></tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="d-flex gap-2">
+    @if (retorno == "reserva")
+    {
+        <a class="btn btn-outline-secondary" asp-controller="Reserva" asp-action="Nueva">Volver a la reserva</a>
+        <a class="btn btn-outline-primary" asp-action="Crear" asp-route-retorno="reserva">Agregar cliente</a>
+    }
+    else
+    {
+        <a class="btn btn-outline-secondary" asp-action="Index">Volver</a>
+    }
+</div>

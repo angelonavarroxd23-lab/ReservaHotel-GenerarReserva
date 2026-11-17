@@ -1,0 +1,21 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = Model.Codigo == 404 ? "No encontrado" : "Error";
+}
+<div class="text-center py-5">
+    @if (Model.Codigo == 404)
+    {
+        <h1 class="display-6">Página o registro no encontrado</h1>
+        <p class="text-muted">El recurso solicitado no existe.</p>
+    }
+    else
+    {
+        <h1 class="display-6">Ocurrió un error inesperado</h1>
+        <p class="text-muted">La operación no pudo completarse. Intente nuevamente.</p>
+    }
+    @if (Model.ShowRequestId)
+    {
+        <p class="small text-muted">Id de solicitud: <code>@Model.RequestId</code></p>
+    }
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Volver al menú principal</a>
+</div>

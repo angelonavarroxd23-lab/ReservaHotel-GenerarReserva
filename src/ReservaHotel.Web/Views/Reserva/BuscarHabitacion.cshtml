@@ -1,0 +1,29 @@
+@model BuscarHabitacionViewModel
+@{
+    ViewData["Title"] = "Buscar Habitación";
+}
+<div class="page-head">
+    <h1>Buscar Habitación</h1>
+    <p>Caso de uso incluido. Habitaciones en estado <strong>Disponible</strong> para @Model.Dias día(s) de hospedaje.</p>
+</div>
+
+<div class="card shadow-sm mb-3">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="tabla-buscar-habitacion">
+            <thead><tr><th>Número</th><th>Tipo</th><th class="text-end">Costo por día</th><th class="text-end">Pago estimado</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var h in Model.Habitaciones)
+            {
+                <tr>
+                    <td class="fw-semibold">@h.Numero</td>
+                    <td>@h.Tipo</td>
+                    <td class="text-end">@h.CostoPorDia.Soles()</td>
+                    <td class="text-end">@((h.CostoPorDia * Model.Dias).Soles())</td>
+                    <td class="text-end"><a class="btn btn-sm btn-primary" asp-action="SeleccionarHabitacion" asp-route-numero="@h.Numero">Seleccionar</a></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+<a class="btn btn-outline-secondary" asp-action="Nueva">Volver a la reserva</a>

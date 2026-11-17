@@ -1,0 +1,34 @@
+@{
+    ViewData["Title"] = "Menú principal";
+}
+<div class="page-head">
+    <h1>Menú principal</h1>
+    <p>Sistema de reservas del hotel. Seleccione una opción.</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6 col-lg-4">
+        <a class="menu-card menu-card-primary" asp-controller="Reserva" asp-action="Iniciar" id="opcion-generar-reserva">
+            <h2>Generar Reserva</h2>
+            <p>Registra una reserva de una o varias habitaciones para un cliente.</p>
+        </a>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <a class="menu-card" asp-controller="Habitaciones" asp-action="Index">
+            <h2>Habitaciones</h2>
+            <p>Consulta el estado: disponible, reservado u ocupado.</p>
+        </a>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <a class="menu-card" asp-controller="Reserva" asp-action="Listado">
+            <h2>Reservas registradas</h2>
+            <p>Revisa las reservas grabadas y su detalle.</p>
+        </a>
+    </div>
+    <div class="col-md-6 col-lg-4">
+        <a class="menu-card" asp-controller="Clientes" asp-action="Index">
+            <h2>Clientes</h2>
+            <p>Busca clientes o registra uno nuevo.</p>
+        </a>
+    </div>
+</div>

@@ -1,0 +1,148 @@
+@model ReservaViewModel
+@{
+    ViewData["Title"] = "Generar Reserva";
+    var d = Model.Draft;
+    var hayHabitacion = d.NumeroHabitacion.HasValue;
+    var pct = (Model.TasaIgv * 100).ToString("0.##");
+}
+<div class="page-head">
+    <h1>Reserva</h1>
+    <p>Caso de uso: Generar reserva de habitación.</p>
+</div>
+
+@if (Model.OfrecerRegistroCliente)
+{
+    <div class="alert alert-info d-flex justify-content-between align-items-center flex-wrap gap-2" id="oferta-registro">
+        <span>¿Desea registrar al nuevo cliente?</span>
+        <button type="submit" form="frmReserva" class="btn btn-sm btn-primary" asp-controller="Reserva" asp-action="AgregarCliente">Registrar nuevo cliente</button>
+    </div>
+}
+
+<form method="post" id="frmReserva" asp-antiforgery="false" action="@Url.Action("Grabar", "Reserva")">
+    @Html.AntiForgeryToken()
+
+    <fieldset class="panel">
+        <legend>Datos del Cliente</legend>
+        <div class="row g-3 align-items-end">
+            <div class="col-sm-5 col-md-4">
+                <label for="CodigoCliente" class="form-label">Cliente (código)</label>
+                <div class="input-group">
+                    <input type="text" inputmode="numeric" class="form-control" id="CodigoCliente" name="CodigoCliente"
+                           value="@d.CodigoClienteTexto" autocomplete="off" />
+                    <button type="submit" class="btn btn-outline-primary" id="btn-buscar-cliente" title="Buscar Cliente"
+                            asp-controller="Reserva" asp-action="BuscarCliente">Buscar Cliente</button>
+                </div>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-outline-secondary" id="btn-agregar-cliente" title="Agregar Cliente"
+                        asp-controller="Reserva" asp-action="AgregarCliente">Agregar Cliente</button>
+            </div>
+            <div class="col-12">
+                <label for="NombreCliente" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="NombreCliente" value="@d.NombreCliente" readonly tabindex="-1" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="panel">
+        <legend>Datos de la Reserva</legend>
+        <div class="row g-3">
+            <div class="col-sm-4">
+                <label for="FechaLlegada" class="form-label">Fecha de llegada</label>
+                <input type="date" class="form-control" id="FechaLlegada" name="FechaLlegada"
+                       value="@d.FechaLlegada.Iso()" data-action="@Url.Action("FijarFechas", "Reserva")" />
+            </div>
+            <div class="col-sm-4">
+                <label for="FechaSalida" class="form-label">Fecha de salida</label>
+                <input type="date" class="form-control" id="FechaSalida" name="FechaSalida"
+                       value="@d.FechaSalida.Iso()" data-action="@Url.Action("FijarFechas", "Reserva")" />
+            </div>
+            <div class="col-sm-4">
+                <label for="CantidadDias" class="form-label">Cantidad de días</label>
+                <input type="text" class="form-control" id="CantidadDias" value="@(d.CantidadDias > 0 ? d.CantidadDias.ToString() : "")" readonly tabindex="-1" />
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="panel">
+        <legend>Datos de las Habitaciones</legend>
+        <div class="row g-3 align-items-end">
+            <div class="col-sm-4 col-md-3">
+                <label for="NumeroHabitacion" class="form-label">Número de habitación</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="NumeroHabitacion" value="@d.NumeroHabitacion" readonly tabindex="-1" />
+                    <button type="submit" class="btn btn-outline-primary" id="btn-buscar-habitacion" title="Buscar Habitación"
+                            asp-controller="Reserva" asp-action="BuscarHabitacion">Buscar</button>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-3">
+                <label for="TipoHabitacion" class="form-label">Tipo</label>
+                <input type="text" class="form-control" id="TipoHabitacion" value="@d.TipoHabitacion" readonly tabindex="-1" />
+            </div>
+            <div class="col-sm-4 col-md-2">
+                <label for="CostoPorDia" class="form-label">Costo x día</label>
+                <input type="text" class="form-control text-end" id="CostoPorDia" value="@d.CostoPorDia.Soles()" readonly tabindex="-1" />
+            </div>
+            <div class="col-md-4">
+                <label for="NombreHuesped" class="form-label">Nombre del huésped</label>
+                <input type="text" class="form-control" id="NombreHuesped" name="NombreHuesped" value="@d.NombreHuesped"
+                       maxlength="120" autocomplete="off" disabled="@(!hayHabitacion)" />
+            </div>
+            <div class="col-12 text-md-end">
+                <button type="submit" class="btn btn-primary" id="btn-agregar-habitacion"
+                        asp-controller="Reserva" asp-action="AgregarHabitacion" disabled="@(!hayHabitacion)">Agregar Habitación</button>
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="panel">
+        <legend>Detalle de la Reserva</legend>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-2" id="tabla-detalle">
+                <thead>
+                    <tr>
+                        <th style="width:2.5rem"></th>
+                        <th>Número</th><th>Tipo</th><th>Huésped</th>
+                        <th class="text-end">Costo diario</th><th class="text-end">Días</th><th class="text-end">Monto a pagar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var l in d.Detalle)
+                {
+                    <tr class="fila-detalle">
+                        <td><input type="radio" class="form-check-input" name="HabitacionSeleccionada" value="@l.NumeroHabitacion" aria-label="Seleccionar habitación @l.NumeroHabitacion" /></td>
+                        <td class="fw-semibold">@l.NumeroHabitacion</td>
+                        <td>@l.Tipo</td>
+                        <td>@l.NombreHuesped</td>
+                        <td class="text-end">@l.CostoDia.Soles()</td>
+                        <td class="text-end">@l.Dias</td>
+                        <td class="text-end">@l.MontoPagar.Soles()</td>
+                    </tr>
+                }
+                @if (d.Detalle.Count == 0)
+                {
+                    <tr><td colspan="7" class="text-center text-muted py-4">Aún no hay habitaciones seleccionadas.</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+            <button type="submit" class="btn btn-outline-danger" id="btn-eliminar-habitacion"
+                    asp-controller="Reserva" asp-action="EliminarHabitacion" disabled="@(d.Detalle.Count == 0)">Eliminar Habitación</button>
+            <dl class="totales mb-0">
+                <dt>Sub total</dt><dd id="subtotal">@Model.Subtotal.Soles()</dd>
+                <dt>IGV (@pct %)</dt><dd id="igv">@Model.Igv.Soles()</dd>
+                <dt class="total">Monto Total</dt><dd class="total" id="montototal">@Model.MontoTotal.Soles()</dd>
+            </dl>
+        </div>
+    </fieldset>
+
+    <div class="d-flex justify-content-center gap-3 mt-3">
+        <button type="submit" class="btn btn-success btn-lg px-5" id="btn-grabar" asp-controller="Reserva" asp-action="Grabar">Grabar Reserva</button>
+        <button type="submit" class="btn btn-outline-secondary btn-lg px-5" id="btn-salir" asp-controller="Reserva" asp-action="Salir">Salir</button>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/js/reserva.js" asp-append-version="true"></script>
+}

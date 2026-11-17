@@ -1,0 +1,38 @@
+@model ClienteForm
+@{
+    ViewData["Title"] = "Agregar Cliente";
+}
+<div class="page-head">
+    <h1>Agregar Cliente</h1>
+    <p>Mantener Clientes – flujo básico "Agregar Cliente". El código se genera automáticamente.</p>
+</div>
+
+<div class="card shadow-sm" style="max-width: 640px">
+    <div class="card-body">
+        <form method="post" asp-action="Crear" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Retorno" />
+            <div class="mb-3">
+                <label asp-for="Nombres" class="form-label"></label>
+                <input asp-for="Nombres" class="form-control" autofocus />
+                <span asp-validation-for="Nombres" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Apellidos" class="form-label"></label>
+                <input asp-for="Apellidos" class="form-control" />
+                <span asp-validation-for="Apellidos" class="text-danger"></span>
+            </div>
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Grabar cliente</button>
+                @if (Model.Retorno == "reserva")
+                {
+                    <a class="btn btn-outline-secondary" asp-controller="Reserva" asp-action="Nueva">Volver a la reserva</a>
+                }
+                else
+                {
+                    <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+                }
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+@model List<Habitacion>
+@{
+    ViewData["Title"] = "Habitaciones";
+    string Clase(EstadoHabitacion e) => e switch
+    {
+        EstadoHabitacion.Disponible => "text-bg-success",
+        EstadoHabitacion.Reservado => "text-bg-warning",
+        _ => "text-bg-secondary"
+    };
+}
+<div class="page-head">
+    <h1>Habitaciones</h1>
+    <p>Estado actual de cada habitación.</p>
+</div>
+
+<div class="row g-3 mb-4">
+    @foreach (var estado in Enum.GetValues<EstadoHabitacion>())
+    {
+        <div class="col-6 col-md-3">
+            <div class="stat-card">
+                <div class="stat-num" id="total-@estado.ToString().ToLower()">@Model.Count(h => h.Estado == estado)</div>
+                <div class="stat-label">@estado.ToString()s</div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0" id="tabla-habitaciones">
+            <thead><tr><th>Número</th><th>Tipo</th><th class="text-end">Costo por día</th><th>Estado</th></tr></thead>
+            <tbody>
+            @foreach (var h in Model)
+            {
+                <tr>
+                    <td class="fw-semibold">@h.Numero</td>
+                    <td>@h.Tipo</td>
+                    <td class="text-end">@h.CostoPorDia.Soles()</td>
+                    <td><span class="badge @Clase(h.Estado)">@h.Estado</span></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

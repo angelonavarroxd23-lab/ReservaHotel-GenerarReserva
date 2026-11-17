@@ -1,0 +1,48 @@
+@model Reserva
+@{
+    ViewData["Title"] = $"Reserva {Model.NumeroReserva}";
+    var pct = ((decimal)(ViewBag.TasaIgv ?? 0m) * 100).ToString("0.##");
+}
+<div class="page-head">
+    <h1>Reserva Nro. <span id="numero-reserva">@Model.NumeroReserva</span></h1>
+    <p>Reserva registrada con su detalle.</p>
+</div>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-4"><div class="text-muted small">Cliente</div><div class="fw-semibold">@Model.Cliente.Codigo – @Model.Cliente.NombreCompleto</div></div>
+            <div class="col-md-3"><div class="text-muted small">Fecha de llegada</div><div class="fw-semibold">@Model.FechaLlegada.Fecha()</div></div>
+            <div class="col-md-3"><div class="text-muted small">Fecha de salida</div><div class="fw-semibold">@Model.FechaSalida.Fecha()</div></div>
+            <div class="col-md-2"><div class="text-muted small">Cantidad de días</div><div class="fw-semibold">@Model.CantidadDias</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-3">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0" id="tabla-detalle-reserva">
+            <thead><tr><th>Número</th><th>Tipo</th><th>Huésped</th><th class="text-end">Costo diario</th><th class="text-end">Días</th><th class="text-end">Monto a pagar</th></tr></thead>
+            <tbody>
+            @foreach (var l in Model.Detalle.OrderBy(x => x.NumeroHabitacion))
+            {
+                <tr>
+                    <td class="fw-semibold">@l.NumeroHabitacion</td><td>@l.Habitacion.Tipo</td><td>@l.NombreHuesped</td>
+                    <td class="text-end">@l.CostoDia.Soles()</td><td class="text-end">@l.Dias</td><td class="text-end">@l.MontoPagar.Soles()</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<dl class="totales ms-auto" style="max-width:320px">
+    <dt>Sub total</dt><dd id="subtotal">@Model.Subtotal.Soles()</dd>
+    <dt>IGV (@pct %)</dt><dd id="igv">@Model.Igv.Soles()</dd>
+    <dt class="total">Monto Total</dt><dd class="total" id="montototal">@Model.MontoTotal.Soles()</dd>
+</dl>
+
+<div class="d-flex gap-2 mt-3">
+    <a class="btn btn-primary" asp-action="Iniciar">Nueva reserva</a>
+    <a class="btn btn-outline-secondary" asp-controller="Home" asp-action="Index">Menú principal</a>
+</div>
